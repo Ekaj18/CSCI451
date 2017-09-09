@@ -17,7 +17,7 @@ zListIndex = []
 
 l = 0
 r = 0
-for k in range(1,LPT-1):
+for k in range(1,LPT-1): #Start at index two
     if k>r: # case 1
         i = 0
         ksub = k
@@ -39,9 +39,11 @@ for k in range(1,LPT-1):
         else: # case 2(b)
             #compare characters starting at position r+1 to characters starting at position len(beta)+1 until a mismatch occurs
             i = Zlist[kp]
-            while pattext[k] == pattext[i]:
+            ksub = k
+            while pattext[ksub] == pattext[i]:
                 i=i+1
-            #mismatch occurs at q>=r+1
+                ksub=ksub+1
+            #mismatch occurs at k>=r+1
             Zlist.insert(k,i-k)
             r=i-1
             l=k
