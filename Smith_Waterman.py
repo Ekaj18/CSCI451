@@ -2,7 +2,7 @@
 #   CSCI 451, HW 2 Problem 1
 #   Emerald Ellis, Elizabeth Pennell, and Jake Petek
 
-s = "tgt"
+s = "tat"
 t = "ctgtact"
 slen = len(s)+1
 tlen=len(t)+1
@@ -37,9 +37,32 @@ def smith_waterman(s, t):
         three = v3[i-1][j]-1
         v4 = smith_waterman(s[:i],t[:j-1])
         four = v4[i][j-1]-1
-        v[i][j] = max(one, two, three, four)
+        v[i][j] = max(one, two, three, four)            
         return v
+
+#????????????????
+def find_alignment(i,j):
+    if i is 0 and j is 0:
+        vPr.append([0,0])
+        return vPr
+    else:
+        index = max(v[i-1][j],v[i][j-1],v[i-1][j-1])
+        if index is v[i-1][j]:
+            vPr.append([i-1,j])
+            find_alignment(i-1,j)
+        elif index is v[i][j-1]:
+            vPr.append([i,j-1])
+            find_alignment(i,j-1)
+        else:
+            vPr.append([i-1,j-1])
+            find_alignment(i-1,j-1)
+
         
 v = smith_waterman(s,t)
 print(v)
-print(max(max(v)))
+print(v.index(max(v)))
+print(max(v).index(max(max(v))))
+vmax =max(max(v)) 
+print(vmax)
+print('The max score is:', vmax)
+print(find_alignment(v.index(max(v)),max(v).index(max(max(v)))))
