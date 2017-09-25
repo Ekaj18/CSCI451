@@ -2,67 +2,83 @@
 #   CSCI 451, HW 2 Problem 1
 #   Emerald Ellis, Elizabeth Pennell, and Jake Petek
 
-s = "tat"
-t = "ctgtact"
-slen = len(s)+1
-tlen=len(t)+1
-v = [[0 for item in range(tlen)] for i in range(slen)]
+s = "bbbtat"
+t = "ctgtacter"
 
-def match(s,t):
-    if s is t:
+#setup value array
+v = [[[0, " "] for i in range(len(t)+1)] for j in range(len(s)+1)]
+
+#scoring function
+def score(i,j):
+    if i is j:
         return 2
     else:
         return -1
 
-def smith_waterman(s, t):
-    i = len(s)
-    j = len(t)
-    # a of s and b of t have highest global alignment score
-    # V(i,j) is max score of the global alignment of A and B over S and T
-    # Base case:
-    if i is 0:
-        v[i][j] = 0
-        if j is 0:
-            v[i][j] = 0
-        return v
-    elif j is 0:
-        v[i][j] = 0
-        return v
-    else:
-        one = 0
-        v2 =smith_waterman(s[:i-1],t[:j-1])
-        mat = match(s[i-1],t[j-1])
-        two = v2[i-1][j-1]+mat
-        v3 = smith_waterman(s[:i-1],t[:j])
-        three = v3[i-1][j]-1
-        v4 = smith_waterman(s[:i],t[:j-1])
-        four = v4[i][j-1]-1
-        v[i][j] = max(one, two, three, four)            
-        return v
+#variables to keep track of the highest score and its location    
+topscore = 0;
+loc = [0,0];
+for i in range(1,len(s)+1):
+    for j in range(1,len(t)+1):
+        max = 0
+        dir = " "
+        #score for a diagonal move
+        diag = v[i-1][j-1][0] + score(s[i-1],t[j-1])
+        #score for a move from above
+        up = v[i-1][j][0] + score(s[i-1]," ")
+        #score for a move from the left
+        left = v[i][j-1][0] + score(" ",t[j-1])
+        if diag >= max:
+            dir = "d"
+            max = diag
+        if up >= max:
+            if up == max:
+                dir += "u"
+            else:
+                dir = "u"
+                max = up
+        if left >= max:
+            if left == max:
+                dir += "l"
+            else:
+                dir = "l"
+                max = left
+        v[i][j] = [max, dir]
+        if max > topscore:
+           topscore = max
+           loc = [i,j]
+        #v[i][j][0] = max(0,
+        #              v[i-1][j-1][0] + score(s[i-1],t[j-1]),
+        #              v[i-1][j][0] + score(s[i-1]," "),
+        #              v[i][j-1][0] + score(" ",t[j-1]))
 
-#????????????????
-def find_alignment(i,j):
-    if i is 0 and j is 0:
-        vPr.append([0,0])
-        return vPr
-    else:
-        index = max(v[i-1][j],v[i][j-1],v[i-1][j-1])
-        if index is v[i-1][j]:
-            vPr.append([i-1,j])
-            find_alignment(i-1,j)
-        elif index is v[i][j-1]:
-            vPr.append([i,j-1])
-            find_alignment(i,j-1)
-        else:
-            vPr.append([i-1,j-1])
-            find_alignment(i-1,j-1)
+#prints complete matrix
+#for i in range(len(v)):
+#   print(v[i])
 
-        
-v = smith_waterman(s,t)
-print(v)
-print(v.index(max(v)))
-print(max(v).index(max(max(v))))
-vmax =max(max(v)) 
-print(vmax)
-print('The max score is:', vmax)
-print(find_alignment(v.index(max(v)),max(v).index(max(max(v)))))
+s_align = ""
+t_align = ""
+#set starting location based on topscore
+i = loc[0]
+j = loc[1]
+#find alignment using matrix
+while i>0 or j>0:
+    if "d" in v[i][j][1]:
+        i-=1
+        j-=1
+        s_align = s[i] + s_align
+        t_align = t[j] + t_align
+    elif "l" in v[i][j][1]:
+        j-=1
+        s_align = "_" + s_align
+        t_align = t[j] + t_align
+    elif "u" in v[i][j][1]:
+        i-=1
+        s_align = s[i] + s_align
+        t_align = "j" + t_align
+    else:
+        i = 0
+        j = 0
+
+print(s_align)
+print(t_align)
