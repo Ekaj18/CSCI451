@@ -76,9 +76,13 @@ while i>0 or j>0:
         i-=1
         s_align = s[i] + s_align
         t_align = "j" + t_align
-    else:
-        i = 0
-        j = 0
+    else: # To print all of T we have to let j go to 0
+##      i = 0
+##      j = 0
+        i-=1
+        j-=1
+        s_align = "_" + s_align
+        t_align = t[j] + t_align
 
 print(s_align)
 print(t_align)
