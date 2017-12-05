@@ -1,3 +1,8 @@
+# CSCI 451
+# HW 5
+# Emerald Ellis, Elizabeth Pennell, Jake Petek
+
+
 class Node():
     def __init__(self, seq_list):
         self.seq_list = []
@@ -33,7 +38,7 @@ class Node():
 
     def print_tree(self, num=0):
         print("Label: " + str(self.value))
-        print(str(num) + ": " + str(self.seq_list))
+        print("Depth: " + str(num) + " Descendants:" + str(self.seq_list))
         print()
         if self.l_child != None:
             self.l_child.print_tree(num+1)
@@ -142,9 +147,8 @@ def simplify_tree(node):
         node.set_value(new_value)
         simplify_tree(node.get_l_child())
         simplify_tree(node.get_r_child())            
-    
 
-slist = ["ACTG", "GTCA", "TTTA", "GGCA"]
+slist =[line.rstrip('\n') for line in open("DNAStrings.txt")]
 d = create_dist_matrix(slist)
 root = create_tree_from_dist_matrix(slist, d)
 fitch_algorithm(root)
